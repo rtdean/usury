@@ -24,6 +24,7 @@ def calculate(transactions, rate, end, context=None):
     :param rate: Interest rate of the loan, where 1.0 == 100%
     :type rate: decimal.Decimal
     :param end:
+    :type end: date
     :param context: Context of which mode(s) this function should operate in
     :type context: usury.Context
     :return:
@@ -133,6 +134,8 @@ def daily_rate(rate, year=None, context=None):
 
 def calc_interest(balance, start, end, rate, context=None):
     """
+    Calculates the interest accrued between two dates for the given balance and
+    interest rate.
 
     :param balance:
     :type balance: decimal.Decimal
@@ -144,7 +147,8 @@ def calc_interest(balance, start, end, rate, context=None):
     :type rate: decimal.Decimal
     :param context: Context of which mode(s) this function should operate in
     :type context: usury.Context
-    :return:
+    :return: Amount of interest accrued between start and end, for balance at
+        rate
     :rtype: decimal.Decimal
     """
     if context is None:
@@ -161,6 +165,7 @@ def calc_interest(balance, start, end, rate, context=None):
     )
     if start >= end:
         return _zero
+
     if context.year_mode == context.YEAR_DAYS_ACTUAL and \
             start < date(end.year-1, 12, 31):
         interest = _zero
@@ -181,6 +186,7 @@ def calc_interest(balance, start, end, rate, context=None):
                 context=context,
             )
         return interest
+
     days = (end - start).days
     daily_interest = (
         decimal.Decimal(balance) *
