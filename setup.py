@@ -1,16 +1,19 @@
 from setuptools import setup, find_packages
 
+with open('README.rst') as fp:
+    readme = fp.read()
+
 setup(
     name='usury',
     version='0.1',
-    description='',
-    long_description='',
+    description='Python interest calculation library',
+    long_description=readme,
     license='Apache 2.0',
     classifiers=[
-        'Programming Language :: Python',
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python',
         'Topic :: Office/Business :: Financial',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],

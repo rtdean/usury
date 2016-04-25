@@ -12,5 +12,6 @@ Installation
 To install usury:
 
 .. code-block:: bash
+
     $ pip install usury
 
