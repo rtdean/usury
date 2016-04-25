@@ -393,5 +393,31 @@ class LoanCase(unittest.TestCase):
             }
         )
 
+    def test_tax_year_interest(self):
+        self.assertEqual(
+            simple.interest_for_fiscal_year(
+                transactions=self.transactions,
+                rate=self.rate,
+                year_ending=date(2014, 12, 31),
+            ),
+            Decimal('233.52')
+        )
+        self.assertEqual(
+            simple.interest_for_fiscal_year(
+                transactions=self.transactions,
+                rate=self.rate,
+                year_ending=date(2015, 12, 31),
+            ),
+            Decimal('657.68')
+        )
+        self.assertEqual(
+            simple.interest_for_fiscal_year(
+                transactions=self.transactions,
+                rate=self.rate,
+                year_ending=date(2016, 12, 31),
+            ),
+            Decimal('15.66')
+        )
+
 if __name__ == '__main__':
     unittest.main()

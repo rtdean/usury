@@ -24,7 +24,7 @@ def calculate(transactions, rate, end, context=None):
     :param rate: Interest rate of the loan, where 1.0 == 100%
     :type rate: decimal.Decimal
     :param end:
-    :type end: date
+    :type end: datetime.date
     :param context: Context of which mode(s) this function should operate in
     :type context: usury.Context
     :return:
@@ -108,6 +108,43 @@ def calculate(transactions, rate, end, context=None):
         }
 
     return rv
+
+
+def interest_for_fiscal_year(transactions, rate, year_ending, context=None):
+    """
+    Returns the amount of interest accrued in a given fiscal year.
+
+    The start of the fiscal year is defined as the end of the year - 1 year.
+
+    :param transactions: a dict containing key (datetime.date) pointing to a
+        transaction value.  The transactional value is the amount to/from the
+        borrower; positive values are money to the borrower, negative is money
+        received from them
+    :type transactions: dict
+    :param rate: Interest rate of the loan, where 1.0 == 100%
+    :type rate: decimal.Decimal
+    :param year_ending: Last day of the fiscal year
+    :type year_ending: datetime.date
+    :param context: Context of which mode(s) this function should operate in
+    :type context: usury.Context
+    :return: Interest accrued during the fiscal year ending `year_ending`
+    :rtype: decimal.Decimal
+    """
+    if context is None:
+        context = context_get()
+    transactions = transactions.copy()
+    start = date(year_ending.year-1, year_ending.month, year_ending.day)
+    trx_dates = sorted(transactions.keys())
+    if start < trx_dates[0]:
+        start = trx_dates[0]
+    if year_ending > trx_dates[-1]:
+        year_ending = trx_dates[-1]
+    if start not in transactions:
+        transactions[start] = _zero
+    result = calculate(transactions=transactions, rate=rate, end=year_ending,
+                       context=context)
+    return result[year_ending]['interest_total'] - \
+        result[start]['interest_total']
 
 
 def daily_rate(rate, year=None, context=None):
