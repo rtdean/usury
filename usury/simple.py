@@ -35,16 +35,19 @@ def calculate(transactions, rate, end, context=None):
     interest_balance = _zero
     interest_total = _zero
     tx_dates = sorted(transactions.keys())
-    _l.debug('tx_dates is %s', ', '.join([ str(x) for x in tx_dates]))
     last_date = tx_dates[0]
     rv = {}
     for tx_date in tx_dates:
         _l.debug('processing entry for date %s', tx_date)
+
         disbursement = 0
         if tx_date > end:
-            _l.debug('stopping iterations because past end date')
-            break
-        payment = decimal.Decimal(transactions[tx_date])
+            _l.debug('date is beyond end, changing date to end for final run')
+            tx_date = end
+            payment = _zero
+        else:
+            payment = decimal.Decimal(transactions[tx_date])
+
         if payment > _zero:
             disbursement = payment
             payment = _zero
@@ -85,6 +88,9 @@ def calculate(transactions, rate, end, context=None):
             'payment_interest': interest_paid,
             'payment_principal': payment - interest_paid,
         }
+
+        if tx_date >= end:
+            break
         last_date = tx_date
 
     if end not in rv and end > tx_dates[-1] and balance > 0:

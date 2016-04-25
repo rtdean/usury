@@ -257,13 +257,17 @@ class LoanCase(unittest.TestCase):
             date(2015, 12, 20): Decimal('-2500.00'),
             date(2016, 3, 27): Decimal('-673.34'),
         }
+        self.rate = Decimal('0.1000000')
+        self.maxDiff = None
 
     def test_calculate(self):
-        self.maxDiff = None
+        """
+        test run of calculation for loan that has been paid off
+        """
         self.assertDictEqual(
             simple.calculate(
                 self.transactions,
-                rate=Decimal('0.1000000'),
+                rate=self.rate,
                 end=date.today()
             ),
             {
@@ -323,6 +327,69 @@ class LoanCase(unittest.TestCase):
                     'payment_interest': Decimal('17.64'),
                     'payment_principal': Decimal('655.70'),
                 }
+            }
+        )
+
+    def test_calculate_end_before_transactions_finished(self):
+        """
+        test calculation where end date occurs in the timespan convered by the
+        transaction dates
+        """
+        self.assertDictEqual(
+            simple.calculate(
+                self.transactions,
+                rate=self.rate,
+                end=date(2015, 11, 21)
+            ),
+            {
+                date(2014, 10, 8): {
+                    'balance': Decimal('10000.00'),
+                    'interest_balance': Decimal('0.00'),
+                    'interest_total': Decimal('0.00'),
+                    'payment': Decimal('0.00'),
+                    'payment_interest': Decimal('0.00'),
+                    'payment_principal': Decimal('0.00'),
+                },
+                date(2015, 1, 3): {
+                    'balance': Decimal('10000.00'),
+                    'interest_balance': Decimal('8.34'),
+                    'interest_total': Decimal('241.86'),
+                    'payment': Decimal('233.52'),
+                    'payment_interest': Decimal('233.52'),
+                    'payment_principal': Decimal('0.00'),
+                },
+                date(2015, 4, 2): {
+                    'balance': Decimal('7755.76'),
+                    'interest_balance': Decimal('0.00'),
+                    'interest_total': Decimal('489.28'),
+                    'payment': Decimal('2500.00'),
+                    'payment_interest': Decimal('255.76'),
+                    'payment_principal': Decimal('2244.24'),
+                },
+                date(2015, 6, 29): {
+                    'balance': Decimal('5444.96'),
+                    'interest_balance': Decimal('0.00'),
+                    'interest_total': Decimal('678.48'),
+                    'payment': Decimal('2500.00'),
+                    'payment_interest': Decimal('189.20'),
+                    'payment_principal': Decimal('2310.80'),
+                },
+                date(2015, 10, 1): {
+                    'balance': Decimal('3086.90'),
+                    'interest_balance': Decimal('0.00'),
+                    'interest_total': Decimal('820.42'),
+                    'payment': Decimal('2500.00'),
+                    'payment_interest': Decimal('141.94'),
+                    'payment_principal': Decimal('2358.06'),
+                },
+                date(2015, 11, 21): {
+                    'balance': Decimal('3086.90'),
+                    'interest_balance': Decimal('43.86'),
+                    'interest_total': Decimal('864.28'),
+                    'payment': Decimal('0.00'),
+                    'payment_interest': Decimal('0.00'),
+                    'payment_principal': Decimal('0.00'),
+                },
             }
         )
 
