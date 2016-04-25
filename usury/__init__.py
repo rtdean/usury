@@ -7,6 +7,8 @@ __context = None
 def context_get():
     """
     Returns the module's current context
+
+    :returns: module's current context
     :rtype: Context
     """
     global __context
@@ -29,9 +31,21 @@ def context_set(context):
 
 def context_local(context=None):
     """
+    Overwrites the module's current context, while in a with statement.
+
+    >>> import usury
+    >>> print usury.Context.year_mode_to_str(usury.context_get().year_mode)
+    Context.YEAR_DAYS_360
+    >>> with usury.context_local() as ctx:
+    ...     ctx.year_mode = usury.Context.YEAR_DAYS_365
+    ...     print usury.Context.year_mode_to_str(usury.context_get().year_mode)
+    ...
+    Context.YEAR_DAYS_365
+    >>> print usury.Context.year_mode_to_str(usury.context_get().year_mode)
+    Context.YEAR_DAYS_360
 
     :param context:
-    :return:
+    :type context: Context
     """
     class manager(object):
         def __init__(self, ctx):

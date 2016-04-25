@@ -19,7 +19,7 @@ setup(
     ],
     author='Ryan T. Dean',
     author_email='rtdean@cytherianage.net',
-    url='',
+    url='https://github.com/rtdean/usury',
     keywords='usury interest',
 
     packages=find_packages(),
