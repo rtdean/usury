@@ -1,5 +1,8 @@
 import decimal as _decimal
 
+__title__ = 'usury'
+__version__ = '0.1.0'
+
 __context = None
 
 

@@ -5,7 +5,7 @@ with open('README.rst') as fp:
 
 setup(
     name='usury',
-    version='0.1',
+    version='0.1.0',
     description='Python interest calculation library',
     long_description=readme,
     license='Apache 2.0',
