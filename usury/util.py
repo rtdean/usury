@@ -8,7 +8,7 @@ _l = logging.getLogger(__name__)
 
 def days_in_year(context=None, year=None):
     """
-    Returns the number of days in a year, according to the specified method
+    Returns the number of days in a year, according to the context
 
     :param context: Context of which mode(s) this function should operate in
     :type context: usury.Context
